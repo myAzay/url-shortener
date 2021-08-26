@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,6 +70,11 @@ namespace UrlShortener
             services.AddIdentity<UserModel, IdentityRole<int>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "Url Shortener API", Version = "v1" });
+            });
+
             services.AddScoped<IJwtService, JwtService>();
         }
 
@@ -92,6 +98,13 @@ namespace UrlShortener
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("v1/swagger.json", "Url Shortener API V1");
+            });
 
             app.UseEndpoints(endpoints =>
             {

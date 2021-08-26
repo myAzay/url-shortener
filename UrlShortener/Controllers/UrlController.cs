@@ -17,7 +17,7 @@ namespace UrlShortener.Controllers
         }
 
         [HttpGet("get-url")]
-        public async Task<ActionResult<string>> GetUrl(GetUrlByShortUrlQuery query)
+        public async Task<ActionResult<string>> GetUrl([FromQuery] GetUrlByShortUrlQuery query)
         {
             return await Mediator.Send(query);
         }
@@ -31,7 +31,7 @@ namespace UrlShortener.Controllers
         }
 
         [HttpGet("redirect")]
-        public async Task<IActionResult> RedirectToUrl(GetUrlByShortUrlQuery query)
+        public async Task<IActionResult> RedirectToUrl([FromQuery] GetUrlByShortUrlQuery query)
         {
             var page = await Mediator.Send(query);
 
