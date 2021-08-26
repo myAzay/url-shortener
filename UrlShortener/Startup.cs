@@ -17,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UrlShortener.Data;
 using UrlShortener.Models;
+using UrlShortener.Services;
 
 namespace UrlShortener
 {
@@ -67,6 +68,8 @@ namespace UrlShortener
 
             services.AddIdentity<UserModel, IdentityRole<int>>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddScoped<IJwtService, JwtService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
