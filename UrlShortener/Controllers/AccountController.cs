@@ -24,5 +24,12 @@ namespace UrlShortener.Controllers
             await Mediator.Send(command);
             return Ok();
         }
+
+        [HttpDelete("delete-user")]
+        public async Task<ActionResult> DeleteUser(DeleteUserCommand command)
+        {
+            await Mediator.Send(command);
+            return Ok();
+        }
     }
 }
