@@ -37,5 +37,11 @@ namespace UrlShortener.Controllers
 
             return Redirect(page);
         }
+
+        [HttpPut("update-url")]
+        public async Task<ActionResult<ShortUrlModel>> ChangeShortUrl(UpdateShortUrlCommand command)
+        {
+            return await Mediator.Send(command);
+        }
     }
 }
