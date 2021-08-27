@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,8 +35,8 @@ namespace UrlShortener.Controllers
         public async Task<IActionResult> RedirectToUrl([FromQuery] GetUrlByShortUrlQuery query)
         {
             var page = await Mediator.Send(query);
-
-            return Redirect(page);
+            var result = Redirect(page);
+            return result;
         }
 
         [HttpPut("update-url")]
