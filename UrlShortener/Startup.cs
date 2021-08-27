@@ -67,7 +67,13 @@ namespace UrlShortener
 
             services.AddControllersWithViews();
 
-            services.AddIdentity<UserModel, IdentityRole<int>>()
+            services.AddIdentity<UserModel, IdentityRole<int>>(options => {
+                options.Password.RequireDigit = false;
+                options.Password.RequiredLength = 4;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = false;
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             services.AddSwaggerGen(c =>
