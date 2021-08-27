@@ -1,3 +1,4 @@
+using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -17,6 +18,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UrlShortener.Data;
+using UrlShortener.Mapper;
 using UrlShortener.Models;
 using UrlShortener.Services;
 
@@ -42,6 +44,14 @@ namespace UrlShortener
                        .AllowAnyMethod()
                        .AllowAnyHeader();
             }));
+
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MappingProfile());
+            });
+
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
 
             services.AddDbContext<ApplicationDbContext>(options =>
                  options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading;
@@ -18,20 +19,16 @@ namespace UrlShortener.AppUsers.Commands
     public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand>
     {
         private readonly UserManager<UserModel> _userManager;
+        private readonly IMapper _mapper;
 
-        public CreateUserCommandHandler(UserManager<UserModel> userManager)
+        public CreateUserCommandHandler(UserManager<UserModel> userManager, IMapper mapper)
         {
             _userManager = userManager;
+            _mapper = mapper;
         }
         public async Task<Unit> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            var user = new UserModel
-            {
-                UserName = request.UserName,
-                Email = request.Email,
-                FirstName = request.FirstName,
-                Surname = request.Surname
-            };
+            var user = _mapper.Map<UserModel>(request);
             var result = await _userManager.CreateAsync(user, request.Password);
 
             if (!result.Succeeded)
