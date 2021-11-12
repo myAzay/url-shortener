@@ -128,7 +128,8 @@ namespace UrlShortener
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("v1/swagger.json", "Url Shortener API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Url Shortener API V1");
+                c.RoutePrefix = String.Empty;
             });
 
             app.UseEndpoints(endpoints =>
