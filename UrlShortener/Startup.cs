@@ -85,6 +85,12 @@ namespace UrlShortener
 
             services.AddControllersWithViews();
 
+            services.AddStackExchangeRedisCache(option =>
+            {
+                option.Configuration = "127.0.0.1:6379";
+                option.InstanceName = "UrlShortener";
+            });
+
             services.AddIdentity<UserModel, IdentityRole<int>>(options => {
                 options.Password.RequireDigit = false;
                 options.Password.RequiredLength = 4;
