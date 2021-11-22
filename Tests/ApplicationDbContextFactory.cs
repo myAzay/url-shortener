@@ -38,5 +38,12 @@ namespace Tests
 
             context.SaveChanges();
         }
+
+        public static void Destroy(ApplicationDbContext context)
+        {
+            context.Database.EnsureDeleted();
+
+            context.Dispose();
+        }
     }
 }

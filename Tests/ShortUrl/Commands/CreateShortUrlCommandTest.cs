@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Tests.ShortUrl.Commands
 {
-    public class CreateShortUrlCommandTest
+    public class CreateShortUrlCommandTest : TestBase
     {
         [Fact]
         public async Task ShouldCreateUrlAndSaveInDatabaseAsync()
@@ -23,16 +23,14 @@ namespace Tests.ShortUrl.Commands
                 .With(x => x.LongUrl, "https://www.google.ru/")
                 .Create();
 
-            var context = ApplicationDbContextFactory.Create();
-
             fixture.Customize<CreateShortUrlCommandHandler>(c => 
                 c.FromFactory(() => 
-                new CreateShortUrlCommandHandler(context))
+                new CreateShortUrlCommandHandler(Context))
             );
 
             var sut = fixture.Create<CreateShortUrlCommandHandler>();
             ShortUrlModel result = await sut.Handle(command, CancellationToken.None);
-            var entity = context.ShortUrlModels.Find(result.Id);
+            var entity = Context.ShortUrlModels.Find(result.Id);
  
             Assert.NotNull(entity);
             Assert.Equal(command.LongUrl, entity.OriginalUrl);

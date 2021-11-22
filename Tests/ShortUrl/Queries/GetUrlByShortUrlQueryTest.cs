@@ -11,13 +11,8 @@ using Xunit;
 
 namespace Tests.ShortUrl.Queries
 {
-    public class GetUrlByShortUrlQueryTest
+    public class GetUrlByShortUrlQueryTest : TestBase
     {
-        private ApplicationDbContext GetContext()
-        {
-            return ApplicationDbContextFactory.Create();
-        }
-
         [Fact]
         public async Task ShouldReturnsCorrectModel()
         {
@@ -26,17 +21,15 @@ namespace Tests.ShortUrl.Queries
                 .With(x => x.ShortUrl, "http://localhost:5001/qtdJwBun")
                 .Create();
 
-            var context = GetContext();
-
             fixture.Customize<GetUrlByShortUrlQueryHandler>(c =>
                 c.FromFactory(() =>
-                new GetUrlByShortUrlQueryHandler(context))
+                new GetUrlByShortUrlQueryHandler(Context))
             );
 
             var sut = fixture.Create<GetUrlByShortUrlQueryHandler>();
 
             string result = await sut.Handle(query, CancellationToken.None);
-            var entity = context.ShortUrlModels
+            var entity = Context.ShortUrlModels
                 .Where(x => x.ShortUrl == query.ShortUrl)
                 .FirstOrDefault();
 
@@ -52,11 +45,9 @@ namespace Tests.ShortUrl.Queries
                 .With(x => x.ShortUrl, "incorrectString")
                 .Create();
 
-            var context = GetContext();
-
             fixture.Customize<GetUrlByShortUrlQueryHandler>(c =>
                 c.FromFactory(() =>
-                new GetUrlByShortUrlQueryHandler(context))
+                new GetUrlByShortUrlQueryHandler(Context))
             );
 
             var sut = fixture.Create<GetUrlByShortUrlQueryHandler>();

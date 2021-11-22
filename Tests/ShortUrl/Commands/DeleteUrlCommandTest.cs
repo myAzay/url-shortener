@@ -10,7 +10,7 @@ using Xunit;
 
 namespace Tests.ShortUrl.Commands
 {
-    public class DeleteUrlCommandTest
+    public class DeleteUrlCommandTest : TestBase
     {
         [Fact]
         public async void ShouldDeleteItemInDatabase()
@@ -20,16 +20,14 @@ namespace Tests.ShortUrl.Commands
                 .With(x => x.Id, 1)
                 .Create();
 
-            var context = ApplicationDbContextFactory.Create();
-
             fixture.Customize<DeleteUrlCommandHandler>(c =>
                 c.FromFactory(() =>
-                new DeleteUrlCommandHandler(context))
+                new DeleteUrlCommandHandler(Context))
             );
 
             var sut = fixture.Create<DeleteUrlCommandHandler>();
             await sut.Handle(command, CancellationToken.None);
-            var entity = context.ShortUrlModels.Find(1);
+            var entity = Context.ShortUrlModels.Find(1);
 
             Assert.Null(entity);
         }

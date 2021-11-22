@@ -12,12 +12,8 @@ using Xunit;
 
 namespace Tests.ShortUrl.Commands
 {
-    public class UpdateShortUrlCommandTest
+    public class UpdateShortUrlCommandTest : TestBase
     {
-        private ApplicationDbContext GetContext()
-        {
-            return ApplicationDbContextFactory.Create();
-        }
         [Fact]
         public async Task ShouldUpdateUrlAndSaveInDatabaseAsync()
         {
@@ -26,16 +22,14 @@ namespace Tests.ShortUrl.Commands
                 .With(x => x.UrlId, 1)
                 .Create();
 
-            var context = GetContext();
-
             fixture.Customize<UpdateShortUrlCommandHandler>(c =>
                 c.FromFactory(() =>
-                new UpdateShortUrlCommandHandler(context))
+                new UpdateShortUrlCommandHandler(Context))
             );
 
             var sut = fixture.Create<UpdateShortUrlCommandHandler>();
             ShortUrlModel result = await sut.Handle(command, CancellationToken.None);
-            var entity = context.ShortUrlModels.Find(result.Id);
+            var entity = Context.ShortUrlModels.Find(result.Id);
 
             Assert.NotNull(entity);
         }
@@ -48,11 +42,9 @@ namespace Tests.ShortUrl.Commands
                 .With(x => x.UrlId, 33)
                 .Create();
 
-            var context = GetContext();
-
             fixture.Customize<UpdateShortUrlCommandHandler>(c =>
                 c.FromFactory(() =>
-                new UpdateShortUrlCommandHandler(context))
+                new UpdateShortUrlCommandHandler(Context))
             );
 
             var sut = fixture.Create<UpdateShortUrlCommandHandler>();
