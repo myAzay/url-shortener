@@ -23,7 +23,7 @@ namespace Tests.ShortUrl.Queries
 
             fixture.Customize<GetUrlByShortUrlQueryHandler>(c =>
                 c.FromFactory(() =>
-                new GetUrlByShortUrlQueryHandler(Context))
+                new GetUrlByShortUrlQueryHandler(Context, Cache))
             );
 
             var sut = fixture.Create<GetUrlByShortUrlQueryHandler>();
@@ -47,7 +47,7 @@ namespace Tests.ShortUrl.Queries
 
             fixture.Customize<GetUrlByShortUrlQueryHandler>(c =>
                 c.FromFactory(() =>
-                new GetUrlByShortUrlQueryHandler(Context))
+                new GetUrlByShortUrlQueryHandler(Context, Cache))
             );
 
             var sut = fixture.Create<GetUrlByShortUrlQueryHandler>();
