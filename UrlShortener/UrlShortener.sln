@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UrlShortener", "UrlShortener.csproj", "{D839682E-ED94-4295-8559-08C6E773D97E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "..\Tests\Tests.csproj", "{2E1838A5-7F43-46F6-845E-4324B704E05B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests", "..\Tests\Tests.csproj", "{2E1838A5-7F43-46F6-845E-4324B704E05B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NBomberTest", "..\NBomberTest\NBomberTest.csproj", "{614B3362-D2DD-422A-A9C8-F9AACA099AEA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{2E1838A5-7F43-46F6-845E-4324B704E05B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2E1838A5-7F43-46F6-845E-4324B704E05B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2E1838A5-7F43-46F6-845E-4324B704E05B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{614B3362-D2DD-422A-A9C8-F9AACA099AEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{614B3362-D2DD-422A-A9C8-F9AACA099AEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{614B3362-D2DD-422A-A9C8-F9AACA099AEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{614B3362-D2DD-422A-A9C8-F9AACA099AEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
