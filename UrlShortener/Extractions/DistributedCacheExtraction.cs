@@ -15,23 +15,30 @@ namespace UrlShortener.Extractions
            TimeSpan? absoluteExpireTime = null,
            TimeSpan? unuserExpireTime = null)
         {
-            var options = new DistributedCacheEntryOptions();
+            try
+            {
+                var options = new DistributedCacheEntryOptions();
 
-            options.AbsoluteExpirationRelativeToNow = absoluteExpireTime ?? TimeSpan.FromMinutes(1);
-            options.SlidingExpiration = unuserExpireTime;
+                options.AbsoluteExpirationRelativeToNow = absoluteExpireTime ?? TimeSpan.FromMinutes(1);
+                options.SlidingExpiration = unuserExpireTime;
 
-            var jsonData = JsonConvert.SerializeObject(data);
-            await cache.SetStringAsync(recordId, jsonData, options);
+                var jsonData = JsonConvert.SerializeObject(data);
+                await cache.SetStringAsync(recordId, jsonData, options);
+            }
+            catch (Exception e) { }
         }
 
         public static async Task<T> GetRecordAsync<T>(this IDistributedCache cache, string recordId)
         {
-            var jsonData = await cache.GetStringAsync(recordId);
-            if (jsonData is null)
+            try
+            {
+                var jsonData = await cache.GetStringAsync(recordId);
+                return (T)JsonConvert.DeserializeObject(jsonData, typeof(T));
+            }
+            catch(Exception e)
             {
                 return default(T);
             }
-            return (T)JsonConvert.DeserializeObject(jsonData, typeof(T));
         }
     }
 }

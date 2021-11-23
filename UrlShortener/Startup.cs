@@ -87,7 +87,7 @@ namespace UrlShortener
 
             services.AddStackExchangeRedisCache(option =>
             {
-                option.Configuration = "127.0.0.1:6379";
+                option.Configuration = Configuration.GetValue<string>("Redis");
                 option.InstanceName = "UrlShortener";
             });
 
