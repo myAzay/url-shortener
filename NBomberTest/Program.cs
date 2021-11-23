@@ -29,7 +29,7 @@ namespace NBomberTest
                 }
             });
 
-            var getUrlScenario = ScenarioBuilder.CreateScenario("create-url", getUrlStep);
+            var getUrlScenario = ScenarioBuilder.CreateScenario("get-url", getUrlStep);
 
             NBomberRunner
                 .RegisterScenarios(getUrlScenario)
