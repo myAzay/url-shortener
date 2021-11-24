@@ -11,22 +11,26 @@ namespace NBomberTest
 {
     public class Program
     {
-        private static string url = String.Empty;
-        private static string id = String.Empty;
+
         private static string GetValueFromResponce(string responceResult, string value)
         {
             return JObject.Parse(responceResult)
                         ?.GetValue(value)
                         ?.ToString();
         }
+
         static void Main(string[] args)
         {
             using var httpClient = new HttpClient();
  
-            var getUrlStep = Step.Create("get-url", async context =>
+            var getUrlStep = Step.Create("get-url",
+                timeout: TimeSpan.FromSeconds(5),
+                execute: async context =>
             {
                 try
                 {
+                    var url = context.Data["url"];
+
                     var response = await httpClient.GetAsync($"https://localhost:5001/api/Url/get-url?ShortUrl={url}");
 
                     return response.IsSuccessStatusCode
@@ -44,12 +48,14 @@ namespace NBomberTest
             {
                 try
                 {
+                    var id = context.Data["id"];
+
                     var jsonString = JsonConvert.SerializeObject(new { urlId = id });
                     var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
                     var response = await httpClient.PutAsync($"https://localhost:5001/api/Url/update-url", httpContent);
                     var result = response.Content.ReadAsStringAsync().Result;
 
-                    url = GetValueFromResponce(result, "shortUrl");
+                    context.Data["url"] = GetValueFromResponce(result, "shortUrl");
 
                     return response.IsSuccessStatusCode
                         ? Response.Ok()
@@ -75,8 +81,8 @@ namespace NBomberTest
                     var response = await httpClient.PostAsync("https://localhost:5001/api/Url/create-url", httpContent);
                     var result = response.Content.ReadAsStringAsync().Result;
 
-                    url = GetValueFromResponce(result, "shortUrl");
-                    id = GetValueFromResponce(result, "id");
+                    context.Data["url"] = GetValueFromResponce(result, "shortUrl");
+                    context.Data["id"] = GetValueFromResponce(result, "id");
 
                     return response.IsSuccessStatusCode
                         ? Response.Ok()
@@ -93,6 +99,8 @@ namespace NBomberTest
             {
                 try
                 {
+                    var id = context.Data["id"];
+
                     var request = new HttpRequestMessage
                     {
                         Method = HttpMethod.Delete,
