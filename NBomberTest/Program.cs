@@ -3,6 +3,8 @@ using NBomber.Contracts;
 using NBomber.CSharp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using shortid;
+using shortid.Configuration;
 using System;
 using System.Net.Http;
 using System.Text;
@@ -22,28 +24,32 @@ namespace NBomberTest
         static void Main(string[] args)
         {
             using var httpClient = new HttpClient();
- 
-            var getUrlStep = Step.Create("get-url",
-                timeout: TimeSpan.FromSeconds(10),
-                execute: async context =>
+
+            var options = new GenerationOptions
             {
-                try
+                Length = 8
+            };
+
+            var getUrlStep = Step.Create("get-url",
+                timeout: TimeSpan.FromSeconds(5),
+                execute: async context =>
                 {
-                    //context.Data["url"] = $"http://localhost:5001/HpAsCqF-";//
-                    var url = context.Data["url"];
+                    try
+                    {
+                        var url = context.Data["url"];
 
-                    var response = await httpClient.GetAsync($"https://localhost:5001/api/Url/get-url?ShortUrl={url}");
+                        var response = await httpClient.GetAsync($"https://localhost:5001/api/Url/get-url?ShortUrl={url}");
 
-                    return response.IsSuccessStatusCode
-                        ? Response.Ok()
-                        : Response.Fail();
+                        return response.IsSuccessStatusCode
+                            ? Response.Ok()
+                            : Response.Fail();
 
-                }
-                catch (Exception e)
-                {
-                    return Response.Fail();
-                }
-            });
+                    }
+                    catch (Exception e)
+                    {
+                        return Response.Fail();
+                    }
+                });
 
             var updateUrlStep = Step.Create("update-url", async context =>
             {
@@ -73,10 +79,9 @@ namespace NBomberTest
             {
                 try
                 {
-                    Random rnd = new Random();
-                    var jsonString = JsonConvert.SerializeObject(new 
-                    { 
-                        longUrl = $"https://www.google.com/string{rnd.Next(0,99)}{rnd.Next(0,99)}"
+                    var jsonString = JsonConvert.SerializeObject(new
+                    {
+                        longUrl = $"https://www.google.com/{ShortId.Generate(options)}"
                     });
                     var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
                     var response = await httpClient.PostAsync("https://localhost:5001/api/Url/create-url", httpContent);
@@ -125,17 +130,17 @@ namespace NBomberTest
             var firstScenario = ScenarioBuilder.CreateScenario("firstScenario", createUrlStep, updateUrlStep, getUrlStep, deleteUrlStep)
                 .WithWarmUpDuration(TimeSpan.FromSeconds(10))
                 .WithLoadSimulations(
-                    Simulation.InjectPerSec(rate: 100, during: TimeSpan.FromSeconds(10))
+                    Simulation.InjectPerSec(rate: 1, during: TimeSpan.FromSeconds(30))
                 );
 
-            var onlyGetUrlScenario = ScenarioBuilder.CreateScenario("onlyGetUrlScenario", getUrlStep)
-                .WithWarmUpDuration(TimeSpan.FromSeconds(10))
-                .WithLoadSimulations(
-                    Simulation.InjectPerSec(rate: 10, during: TimeSpan.FromSeconds(20))
-                );
+            var createAndGetUrAndDeletteScenario = ScenarioBuilder.CreateScenario("createAndGetUrlScenario", createUrlStep, getUrlStep, deleteUrlStep)
+               .WithWarmUpDuration(TimeSpan.FromSeconds(10))
+               .WithLoadSimulations(
+                   Simulation.InjectPerSec(rate: 100, during: TimeSpan.FromSeconds(20))
+               );
 
             NBomberRunner
-                .RegisterScenarios(onlyGetUrlScenario)
+                .RegisterScenarios(createAndGetUrAndDeletteScenario)
                 .WithReportFormats(ReportFormat.Txt)
                 .Run();
         }
