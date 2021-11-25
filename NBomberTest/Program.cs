@@ -127,8 +127,14 @@ namespace NBomberTest
                     Simulation.InjectPerSec(rate: 1, during: TimeSpan.FromSeconds(30))
                 );
 
+            var createAndGetUrAndDeletteScenario = ScenarioBuilder.CreateScenario("createAndGetUrlScenario", createUrlStep, getUrlStep, deleteUrlStep)
+               .WithWarmUpDuration(TimeSpan.FromSeconds(10))
+               .WithLoadSimulations(
+                   Simulation.InjectPerSec(rate: 100, during: TimeSpan.FromSeconds(20))
+               );
+
             NBomberRunner
-                .RegisterScenarios(firstScenario)
+                .RegisterScenarios(createAndGetUrAndDeletteScenario)
                 .WithReportFormats(ReportFormat.Txt)
                 .Run();
         }
