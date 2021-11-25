@@ -3,6 +3,8 @@ using NBomber.Contracts;
 using NBomber.CSharp;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using shortid;
+using shortid.Configuration;
 using System;
 using System.Net.Http;
 using System.Text;
@@ -22,7 +24,12 @@ namespace NBomberTest
         static void Main(string[] args)
         {
             using var httpClient = new HttpClient();
- 
+
+            var options = new GenerationOptions
+            {
+                Length = 8
+            };
+
             var getUrlStep = Step.Create("get-url",
                 timeout: TimeSpan.FromSeconds(5),
                 execute: async context =>
@@ -72,10 +79,9 @@ namespace NBomberTest
             {
                 try
                 {
-                    Random rnd = new Random();
                     var jsonString = JsonConvert.SerializeObject(new 
                     { 
-                        longUrl = $"https://www.google.com/string{rnd.Next(0,99)}{rnd.Next(0,99)}"
+                        longUrl = $"https://www.google.com/{ShortId.Generate(options)}"
                     });
                     var httpContent = new StringContent(jsonString, Encoding.UTF8, "application/json");
                     var response = await httpClient.PostAsync("https://localhost:5001/api/Url/create-url", httpContent);
