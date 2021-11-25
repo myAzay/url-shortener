@@ -24,11 +24,12 @@ namespace NBomberTest
             using var httpClient = new HttpClient();
  
             var getUrlStep = Step.Create("get-url",
-                timeout: TimeSpan.FromSeconds(5),
+                timeout: TimeSpan.FromSeconds(10),
                 execute: async context =>
             {
                 try
                 {
+                    //context.Data["url"] = $"http://localhost:5001/HpAsCqF-";//
                     var url = context.Data["url"];
 
                     var response = await httpClient.GetAsync($"https://localhost:5001/api/Url/get-url?ShortUrl={url}");
@@ -124,11 +125,17 @@ namespace NBomberTest
             var firstScenario = ScenarioBuilder.CreateScenario("firstScenario", createUrlStep, updateUrlStep, getUrlStep, deleteUrlStep)
                 .WithWarmUpDuration(TimeSpan.FromSeconds(10))
                 .WithLoadSimulations(
-                    Simulation.InjectPerSec(rate: 1, during: TimeSpan.FromSeconds(30))
+                    Simulation.InjectPerSec(rate: 100, during: TimeSpan.FromSeconds(10))
+                );
+
+            var onlyGetUrlScenario = ScenarioBuilder.CreateScenario("onlyGetUrlScenario", getUrlStep)
+                .WithWarmUpDuration(TimeSpan.FromSeconds(10))
+                .WithLoadSimulations(
+                    Simulation.InjectPerSec(rate: 10, during: TimeSpan.FromSeconds(20))
                 );
 
             NBomberRunner
-                .RegisterScenarios(firstScenario)
+                .RegisterScenarios(onlyGetUrlScenario)
                 .WithReportFormats(ReportFormat.Txt)
                 .Run();
         }
