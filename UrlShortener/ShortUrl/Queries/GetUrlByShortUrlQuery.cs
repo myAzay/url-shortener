@@ -29,7 +29,7 @@ namespace UrlShortener.ShortUrl.Commands
 
         public async Task<string> Handle(GetUrlByShortUrlQuery request, CancellationToken cancellationToken)
         {
-            var recordKey = "UrlShortener_" + DateTime.Now.ToString("dd.MM.yyy_hh:mm");
+            var recordKey = "UrlShortener_" + request.ShortUrl;
 
             var cacheData = await _cache.GetRecordAsync<ShortUrlModel>(recordKey);
 
