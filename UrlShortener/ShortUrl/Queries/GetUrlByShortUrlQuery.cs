@@ -42,6 +42,7 @@ namespace UrlShortener.ShortUrl.Commands
             var entity = await _context.ShortUrlModels
                 .FromSqlRaw("Select * From ShortUrlModels Where ShortUrl = @ShortUrl",
                     new SqlParameter("@ShortUrl", request.ShortUrl))
+                .AsNoTracking()
                 .SingleOrDefaultAsync();
 
             _ = entity ?? throw new Exception("Address is no exists");
