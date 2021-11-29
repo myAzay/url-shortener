@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using shortid;
 using shortid.Configuration;
 using System;
@@ -26,7 +28,10 @@ namespace UrlShortener.ShortUrl.Commands
         }
         public async Task<ShortUrlModel> Handle(UpdateShortUrlCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.ShortUrlModels.FindAsync(request.UrlId);
+            var entity = await _context.ShortUrlModels
+                .FromSqlRaw("Select * From ShortUrlModels Where Id = @UrlId",
+                    new SqlParameter("@UrlId",request.UrlId))
+                .FirstOrDefaultAsync();
 
             _ = entity ?? throw new Exception("Entity is not exist");
 
@@ -37,7 +42,7 @@ namespace UrlShortener.ShortUrl.Commands
 
             entity.ShortUrl = $"{ServiceUrl}/{ShortId.Generate(options)}";
 
-            await _context.SaveChangesAsync(cancellationToken);
+             await _context.SaveChangesAsync(cancellationToken);
 
             return entity;
         }

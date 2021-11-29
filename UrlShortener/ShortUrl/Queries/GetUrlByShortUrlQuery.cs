@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using System;
@@ -39,7 +40,8 @@ namespace UrlShortener.ShortUrl.Commands
             }
 
             var entity = await _context.ShortUrlModels
-                .Where(x => x.ShortUrl == request.ShortUrl)
+                .FromSqlRaw("Select * From ShortUrlModels Where ShortUrl = @ShortUrl",
+                    new SqlParameter("@ShortUrl", request.ShortUrl))
                 .SingleOrDefaultAsync();
 
             _ = entity ?? throw new Exception("Address is no exists");

@@ -1,4 +1,6 @@
 ﻿using MediatR;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +25,10 @@ namespace UrlShortener.ShortUrl.Commands
 
         public async Task<Unit> Handle(DeleteUrlCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.ShortUrlModels.FindAsync(request.Id);
+            var entity = await _context.ShortUrlModels
+               .FromSqlRaw("Select * From ShortUrlModels Where Id = @id",
+                   new SqlParameter("@id", request.Id))
+               .FirstOrDefaultAsync();
 
             if (entity is not null) _context.ShortUrlModels.Remove(entity);
 

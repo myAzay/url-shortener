@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using shortid;
 using shortid.Configuration;
@@ -29,7 +30,8 @@ namespace UrlShortener.ShortUrl.Commands
         public async Task<ShortUrlModel> Handle(CreateShortUrlCommand request, CancellationToken cancellationToken)
         {
             var entity = await _context.ShortUrlModels
-                .Where(x => x.OriginalUrl == request.LongUrl)
+                .FromSqlRaw("Select * From ShortUrlModels Where OriginalUrl = @LongUrl",
+                    new SqlParameter("@LongUrl", request.LongUrl))
                 .SingleOrDefaultAsync();
 
             if (entity is not null) return entity;
