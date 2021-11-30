@@ -27,12 +27,18 @@ namespace Tests
 
         public static void SeedSampleData(ApplicationDbContext context)
         {
-            context.ShortUrlModels.Add(
+            context.ShortUrlModels.AddRange(
                 new ShortUrlModel
                 {
                     Id = 1,
                     ShortUrl = "http://localhost:5001/qtdJwBun",
-                    OriginalUrl = "https://www.google.com/search?q=bitly&rlz=1C1SQJL_ruUA906UA906&oq=bitl&aqs=chrome.0.69i59j69i57j46j0i433j69i60l4.1023j0j4&sourceid=chrome&ie=UTF-8"
+                    OriginalUrl = "https://www.google.ru/"
+                },
+                new ShortUrlModel
+                {
+                    Id = 2,
+                    ShortUrl = "http://localhost:5001/RxoZRbNZ",
+                    OriginalUrl = "https://www.yandex.ru/"
                 }
             );
 
