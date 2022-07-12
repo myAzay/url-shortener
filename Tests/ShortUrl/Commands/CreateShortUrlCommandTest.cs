@@ -33,7 +33,7 @@ namespace Tests.ShortUrl.Commands
             var entity = Context.ShortUrlModels.Find(result.Id);
  
             Assert.NotNull(entity);
-            Assert.Equal(command.LongUrl, entity.OriginalUrl + "sdasdsadasd");
+            Assert.Equal(command.LongUrl, entity.OriginalUrl);
         }
     }
 }
