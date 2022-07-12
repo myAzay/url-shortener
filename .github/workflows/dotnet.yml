@@ -17,11 +17,9 @@ jobs:
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: 5.0.x
-    - name: TestLs
-      run: ls
     - name: Restore dependencies
-      run: dotnet restore .\UrlShortener\UrlShortener.csproj
-    - name: Build
-      run: dotnet build --no-restore
+      run: dotnet restore ./UrlShortener/
+    - name: Publish
+      run: dotnet publish ./UrlShortener/ -c Release -o deploy -r linux-x64 --self-contained true
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test ./UrlShortener/ --no-build --verbosity normal
