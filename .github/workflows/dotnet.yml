@@ -20,7 +20,7 @@ jobs:
     - name: TestLs
       run: ls
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore .\UrlShortener\UrlShortener.csproj
     - name: Build
       run: dotnet build --no-restore
     - name: Test
