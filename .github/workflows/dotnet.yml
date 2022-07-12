@@ -18,8 +18,10 @@ jobs:
       with:
         dotnet-version: 5.0.x
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore ./UrlShortener/
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build ./UrlShortener/ --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test ./UrlShortener/ --no-build --verbosity normal
+    - name: Publish
+      run: dotnet publish ./UrlShortener/ -c Release -o deploy -r linux-x64   
